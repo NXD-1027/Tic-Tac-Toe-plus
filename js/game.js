@@ -27,7 +27,8 @@ function createInitialState() {
     winner: null,
     moveHistory: [],
     mode: "local",
-    aiDifficulty: "easy"
+    aiDifficulty: "easy",
+    isAiThinking: false
   };
 }
 
@@ -40,7 +41,8 @@ function resetGame() {
 
   Object.assign(gameState, freshState, {
     mode: previousMode,
-    aiDifficulty: previousDifficulty
+    aiDifficulty: previousDifficulty,
+    isAiThinking: false
   });
 }
 
@@ -165,6 +167,7 @@ function undoMove(state) {
   state.activeMicro = lastMove.previousActiveMicro;
   state.winner = lastMove.previousGameWinner;
   state.gameOver = lastMove.previousGameOver;
+  state.isAiThinking = false;
 
   return true;
 }
