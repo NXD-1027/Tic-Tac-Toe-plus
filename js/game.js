@@ -146,6 +146,43 @@ function makeMove(state, macroRow, macroCol, microIndex) {
   return true;
 }
 
+function undoMove(state) {
+  if (state.moveHistory.length === 0) {
+    return false;
+  }
+
+  const lastMove = state.moveHistory.pop();
+  const microBoard = getMicroBoard(state, lastMove.macroRow, lastMove.macroCol);
+
+  if (!microBoard) {
+    return false;
+  }
+
+  microBoard.cells[lastMove.microIndex] = null;
+  microBoard.winner = lastMove.previousMicroWinner;
+
+  state.currentPlayer = lastMove.player;
+  state.activeMicro = lastMove.previousActiveMicro;
+  state.winner = lastMove.previousGameWinner;
+  state.gameOver = lastMove.previousGameOver;
+
+  return true;
+}
+
+function undoForCurrentMode(state) {
+  if (state.moveHistory.length === 0) {
+    return false;
+  }
+
+  if (state.mode === "ai" && state.moveHistory.length >= 2) {
+    const firstUndo = undoMove(state);
+    const secondUndo = undoMove(state);
+    return firstUndo || secondUndo;
+  }
+
+  return undoMove(state);
+}
+
 window.TicTacToeGame = {
   gameState,
   createInitialState,
@@ -156,5 +193,7 @@ window.TicTacToeGame = {
   getGlobalCells,
   isValidMove,
   getNextActiveMicro,
-  makeMove
+  makeMove,
+  undoMove,
+  undoForCurrentMode
 };
