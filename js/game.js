@@ -1,4 +1,4 @@
-function createMicroBoard() {
+function createStateMicroBoard() {
   return {
     cells: Array(9).fill(null),
     winner: null
@@ -8,7 +8,7 @@ function createMicroBoard() {
 function createInitialState() {
   return {
     macroBoard: Array.from({ length: 3 }, () =>
-      Array.from({ length: 3 }, () => createMicroBoard())
+      Array.from({ length: 3 }, () => createStateMicroBoard())
     ),
     currentPlayer: "X",
     activeMicro: null,
@@ -23,7 +23,14 @@ function createInitialState() {
 const gameState = createInitialState();
 
 function resetGame() {
-  Object.assign(gameState, createInitialState());
+  const freshState = createInitialState();
+  const previousMode = gameState.mode;
+  const previousDifficulty = gameState.aiDifficulty;
+
+  Object.assign(gameState, freshState, {
+    mode: previousMode,
+    aiDifficulty: previousDifficulty
+  });
 }
 
 function getMicroBoard(state, macroRow, macroCol) {
@@ -33,6 +40,7 @@ function getMicroBoard(state, macroRow, macroCol) {
 function isMicroBoardPlayable(microBoard) {
   return Boolean(
     microBoard &&
+    Array.isArray(microBoard.cells) &&
     microBoard.winner === null &&
     microBoard.cells.some(cell => cell === null)
   );
