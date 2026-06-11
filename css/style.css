@@ -11,6 +11,9 @@
   --accent-soft: #e8ecff;
   --active: #45d483;
   --inactive: rgba(148, 163, 184, 0.42);
+  --x-color: #2f56d9;
+  --o-color: #d84c5f;
+  --draw-color: #7c8798;
   --shadow: 0 20px 60px rgba(23, 32, 51, 0.12);
   --radius: 20px;
   font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -138,6 +141,45 @@ h1 {
   opacity: 0.45;
 }
 
+.micro-board.won-x,
+.micro-board.won-o,
+.micro-board.draw {
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.92);
+}
+
+.micro-board.won-x::after,
+.micro-board.won-o::after,
+.micro-board.draw::after {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  font-size: clamp(2.6rem, 11vw, 6.5rem);
+  font-weight: 900;
+  pointer-events: none;
+  text-shadow: 0 8px 22px rgba(23, 32, 51, 0.18);
+}
+
+.micro-board.won-x::after {
+  content: "X";
+  color: var(--x-color);
+}
+
+.micro-board.won-o::after {
+  content: "O";
+  color: var(--o-color);
+}
+
+.micro-board.draw::after {
+  content: "平";
+  color: var(--draw-color);
+  font-size: clamp(1.8rem, 8vw, 4.2rem);
+}
+
 .cell {
   display: flex;
   align-items: center;
@@ -175,11 +217,11 @@ h1 {
 }
 
 .cell.x {
-  color: #2f56d9;
+  color: var(--x-color);
 }
 
 .cell.o {
-  color: #d84c5f;
+  color: var(--o-color);
 }
 
 .control-panel {
