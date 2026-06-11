@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const { gameState, resetGame, makeMove, undoForCurrentMode } = window.TicTacToeGame;
   const { renderBoard, renderGame } = window.TicTacToeRender;
+  const { getAiMove } = window.TicTacToeAI;
+  let aiTimer = null;
 
   if (!boardElement) {
     console.error("Board element was not found.");
@@ -29,15 +31,67 @@ document.addEventListener("DOMContentLoaded", () => {
     syncControlsFromState();
   }
 
+  function clearAiTimer() {
+    if (aiTimer !== null) {
+      clearTimeout(aiTimer);
+      aiTimer = null;
+    }
+  }
+
   function resetAndRender() {
+    clearAiTimer();
     resetGame();
     fullRender();
     console.log("Game reset.");
   }
 
+  function shouldAiMove() {
+    return gameState.mode === "ai" &&
+      !gameState.gameOver &&
+      gameState.currentPlayer === "O";
+  }
+
+  function maybeTriggerAiMove() {
+    if (!shouldAiMove()) {
+      return;
+    }
+
+    clearAiTimer();
+    gameState.isAiThinking = true;
+    renderGame(gameState);
+
+    aiTimer = setTimeout(() => {
+      aiTimer = null;
+
+      if (!shouldAiMove()) {
+        gameState.isAiThinking = false;
+        renderGame(gameState);
+        return;
+      }
+
+      const move = getAiMove(gameState);
+
+      if (move) {
+        makeMove(gameState, move.macroRow, move.macroCol, move.microIndex);
+        console.log("AI move made:", move);
+      }
+
+      gameState.isAiThinking = false;
+      renderGame(gameState);
+    }, 350);
+  }
+
   fullRender();
 
   boardElement.addEventListener("click", event => {
+    if (gameState.isAiThinking) {
+      return;
+    }
+
+    if (gameState.mode === "ai" && gameState.currentPlayer !== "X") {
+      return;
+    }
+
     const cell = event.target.closest(".cell");
 
     if (!cell) return;
@@ -54,15 +108,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderGame(gameState);
     console.log("Move made:", { macroRow, macroCol, microIndex });
+    maybeTriggerAiMove();
   });
 
   restartButton?.addEventListener("click", resetAndRender);
 
   undoButton?.addEventListener("click", () => {
+    clearAiTimer();
+    gameState.isAiThinking = false;
     const undone = undoForCurrentMode(gameState);
 
     if (!undone) {
       console.log("Nothing to undo.");
+      renderGame(gameState);
       return;
     }
 
