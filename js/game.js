@@ -1,3 +1,14 @@
+const WIN_PATTERNS = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6]
+];
+
 function createStateMicroBoard() {
   return {
     cells: Array(9).fill(null),
@@ -44,6 +55,27 @@ function isMicroBoardPlayable(microBoard) {
     microBoard.winner === null &&
     microBoard.cells.some(cell => cell === null)
   );
+}
+
+function checkWinner(cells) {
+  for (const pattern of WIN_PATTERNS) {
+    const [a, b, c] = pattern;
+    const value = cells[a];
+
+    if (value && value !== "draw" && value === cells[b] && value === cells[c]) {
+      return value;
+    }
+  }
+
+  if (cells.every(Boolean)) {
+    return "draw";
+  }
+
+  return null;
+}
+
+function getGlobalCells(macroBoard) {
+  return macroBoard.flat().map(microBoard => microBoard.winner);
 }
 
 function isValidMove(state, macroRow, macroCol, microIndex) {
@@ -97,6 +129,17 @@ function makeMove(state, macroRow, macroCol, microIndex) {
   });
 
   microBoard.cells[microIndex] = state.currentPlayer;
+  microBoard.winner = checkWinner(microBoard.cells);
+
+  const globalWinner = checkWinner(getGlobalCells(state.macroBoard));
+
+  if (globalWinner) {
+    state.winner = globalWinner;
+    state.gameOver = true;
+    state.activeMicro = null;
+    return true;
+  }
+
   state.activeMicro = getNextActiveMicro(state, microIndex);
   state.currentPlayer = state.currentPlayer === "X" ? "O" : "X";
 
@@ -109,6 +152,8 @@ window.TicTacToeGame = {
   resetGame,
   getMicroBoard,
   isMicroBoardPlayable,
+  checkWinner,
+  getGlobalCells,
   isValidMove,
   getNextActiveMicro,
   makeMove
