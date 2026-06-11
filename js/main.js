@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const modeSelect = document.querySelector("#mode-select");
   const difficultySelect = document.querySelector("#difficulty-select");
 
-  const { gameState, resetGame } = window.TicTacToeGame;
+  const { gameState, resetGame, makeMove } = window.TicTacToeGame;
   const { renderBoard, renderGame } = window.TicTacToeRender;
 
   if (!boardElement) {
@@ -23,8 +23,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const macroRow = Number(cell.dataset.macroRow);
     const macroCol = Number(cell.dataset.macroCol);
     const microIndex = Number(cell.dataset.microIndex);
+    const moved = makeMove(gameState, macroRow, macroCol, microIndex);
 
-    console.log("Cell clicked:", { macroRow, macroCol, microIndex });
+    if (!moved) {
+      console.log("Invalid move:", { macroRow, macroCol, microIndex });
+      return;
+    }
+
+    renderGame(gameState);
+    console.log("Move made:", { macroRow, macroCol, microIndex });
   });
 
   restartButton?.addEventListener("click", () => {
@@ -35,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   modeSelect?.addEventListener("change", event => {
     gameState.mode = event.target.value;
+    renderGame(gameState);
     console.log("Mode changed:", gameState.mode);
   });
 
