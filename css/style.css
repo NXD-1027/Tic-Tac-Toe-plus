@@ -9,6 +9,8 @@
   --strong-line: #25324a;
   --accent: #4f6df5;
   --accent-soft: #e8ecff;
+  --active: #45d483;
+  --inactive: rgba(148, 163, 184, 0.42);
   --shadow: 0 20px 60px rgba(23, 32, 51, 0.12);
   --radius: 20px;
   font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -109,6 +111,7 @@ h1 {
 }
 
 .micro-board {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -118,6 +121,21 @@ h1 {
   border: 2px solid rgba(255, 255, 255, 0.65);
   border-radius: 14px;
   overflow: hidden;
+  transition: opacity 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.micro-board.free {
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.micro-board.active {
+  border-color: var(--active);
+  box-shadow: 0 0 0 4px rgba(69, 212, 131, 0.28), 0 0 26px rgba(69, 212, 131, 0.32);
+  transform: translateY(-1px);
+}
+
+.micro-board.inactive {
+  opacity: 0.45;
 }
 
 .cell {
@@ -134,7 +152,7 @@ h1 {
   font-size: clamp(1.1rem, 4vw, 2rem);
   font-weight: 800;
   cursor: pointer;
-  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -144,6 +162,16 @@ h1 {
   box-shadow: inset 0 0 0 2px var(--accent);
   outline: none;
   transform: scale(0.98);
+}
+
+.cell:disabled {
+  cursor: not-allowed;
+}
+
+.cell:disabled:hover {
+  background: var(--panel);
+  box-shadow: none;
+  transform: none;
 }
 
 .cell.x {
