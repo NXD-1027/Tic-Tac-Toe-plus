@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="超级井字棋 Tic-Tac-Toe Plus 网页小游戏">
+  <title>超级井字棋 Tic-Tac-Toe Plus</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <p class="eyebrow">Ultimate Tic-Tac-Toe</p>
+      <h1>超级井字棋</h1>
+      <p class="subtitle">9 个小棋盘组成的大型策略井字棋。</p>
+    </header>
+
+    <section class="status-panel" aria-live="polite">
+      <div id="current-player" class="status-card">当前玩家：X</div>
+      <div id="next-board-hint" class="status-card">当前可在任意小棋盘落子</div>
+    </section>
+
+    <main class="game-area">
+      <div id="board" class="macro-board" aria-label="超级井字棋棋盘"></div>
+    </main>
+
+    <section class="control-panel" aria-label="游戏控制">
+      <button id="restart-button" type="button">重新开始</button>
+      <button id="undo-button" type="button" disabled>悔棋</button>
+
+      <label class="control-field">
+        <span>模式</span>
+        <select id="mode-select">
+          <option value="local">本地双人</option>
+          <option value="ai">人机对战</option>
+        </select>
+      </label>
+
+      <label class="control-field">
+        <span>AI 难度</span>
+        <select id="difficulty-select">
+          <option value="easy">简单</option>
+          <option value="medium">中等</option>
+        </select>
+      </label>
+    </section>
+  </div>
+
+  <script src="js/utils.js" defer></script>
+  <script src="js/game.js" defer></script>
+  <script src="js/render.js" defer></script>
+  <script src="js/ai.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>
