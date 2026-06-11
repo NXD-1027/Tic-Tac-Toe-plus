@@ -71,6 +71,18 @@ function updateStatus(state) {
     return;
   }
 
+  if (state.isAiThinking) {
+    if (currentPlayerElement) {
+      currentPlayerElement.textContent = "AI 正在思考...";
+    }
+
+    if (nextBoardHintElement) {
+      nextBoardHintElement.textContent = "请稍等，AI 即将落子";
+    }
+
+    return;
+  }
+
   if (currentPlayerElement) {
     currentPlayerElement.textContent = `当前玩家：${state.currentPlayer}`;
   }
@@ -91,7 +103,7 @@ function updateCells(state) {
     cell.textContent = value ?? "";
     cell.classList.toggle("x", value === "X");
     cell.classList.toggle("o", value === "O");
-    cell.disabled = !window.TicTacToeGame.isValidMove(state, macroRow, macroCol, microIndex);
+    cell.disabled = state.isAiThinking || !window.TicTacToeGame.isValidMove(state, macroRow, macroCol, microIndex);
     cell.setAttribute(
       "aria-label",
       `大棋盘第 ${macroRow + 1} 行第 ${macroCol + 1} 列，小棋盘格子 ${microIndex + 1}${value ? `，已落子 ${value}` : ""}`
@@ -104,10 +116,10 @@ function updateMicroBoards(state) {
     const macroRow = Number(microBoardElement.dataset.macroRow);
     const macroCol = Number(microBoardElement.dataset.macroCol);
     const microBoard = window.TicTacToeGame.getMicroBoard(state, macroRow, macroCol);
-    const isActive = state.activeMicro !== null &&
+    const isActive = !state.isAiThinking && state.activeMicro !== null &&
       state.activeMicro.row === macroRow &&
       state.activeMicro.col === macroCol;
-    const isFree = !state.gameOver && state.activeMicro === null && window.TicTacToeGame.isMicroBoardPlayable(microBoard);
+    const isFree = !state.isAiThinking && !state.gameOver && state.activeMicro === null && window.TicTacToeGame.isMicroBoardPlayable(microBoard);
     const isInactive = !isActive && !isFree;
 
     microBoardElement.dataset.winner = microBoard?.winner ?? "";
@@ -122,9 +134,24 @@ function updateMicroBoards(state) {
 
 function updateControls(state) {
   const undoButton = document.querySelector("#undo-button");
+  const restartButton = document.querySelector("#restart-button");
+  const modeSelect = document.querySelector("#mode-select");
+  const difficultySelect = document.querySelector("#difficulty-select");
 
   if (undoButton) {
-    undoButton.disabled = state.moveHistory.length === 0;
+    undoButton.disabled = state.isAiThinking || state.moveHistory.length === 0;
+  }
+
+  if (restartButton) {
+    restartButton.disabled = state.isAiThinking;
+  }
+
+  if (modeSelect) {
+    modeSelect.disabled = state.isAiThinking;
+  }
+
+  if (difficultySelect) {
+    difficultySelect.disabled = state.isAiThinking;
   }
 }
 
