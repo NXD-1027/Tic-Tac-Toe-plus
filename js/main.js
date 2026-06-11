@@ -12,8 +12,23 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  renderBoard(boardElement);
-  renderGame(gameState);
+  function syncControlsFromState() {
+    if (modeSelect) {
+      modeSelect.value = gameState.mode;
+    }
+
+    if (difficultySelect) {
+      difficultySelect.value = gameState.aiDifficulty;
+    }
+  }
+
+  function fullRender() {
+    renderBoard(boardElement);
+    renderGame(gameState);
+    syncControlsFromState();
+  }
+
+  fullRender();
 
   boardElement.addEventListener("click", event => {
     const cell = event.target.closest(".cell");
@@ -36,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   restartButton?.addEventListener("click", () => {
     resetGame();
-    renderGame(gameState);
+    fullRender();
     console.log("Game reset.");
   });
 
