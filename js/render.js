@@ -12,7 +12,7 @@ function createCell(macroRow, macroCol, microIndex) {
   return cell;
 }
 
-function createMicroBoard(macroRow, macroCol) {
+function createMicroBoardElement(macroRow, macroCol) {
   const microBoard = document.createElement("section");
   microBoard.className = "micro-board";
   microBoard.dataset.macroRow = String(macroRow);
@@ -34,7 +34,7 @@ function renderBoard(boardElement) {
 
   for (let macroRow = 0; macroRow < 3; macroRow += 1) {
     for (let macroCol = 0; macroCol < 3; macroCol += 1) {
-      boardElement.appendChild(createMicroBoard(macroRow, macroCol));
+      boardElement.appendChild(createMicroBoardElement(macroRow, macroCol));
     }
   }
 }
@@ -65,8 +65,8 @@ function updateCells(state) {
     const macroRow = Number(cell.dataset.macroRow);
     const macroCol = Number(cell.dataset.macroCol);
     const microIndex = Number(cell.dataset.microIndex);
-    const microBoard = state.macroBoard[macroRow][macroCol];
-    const value = microBoard.cells[microIndex];
+    const microBoard = window.TicTacToeGame.getMicroBoard(state, macroRow, macroCol);
+    const value = microBoard?.cells?.[microIndex] ?? null;
 
     cell.textContent = value ?? "";
     cell.classList.toggle("x", value === "X");
@@ -83,7 +83,7 @@ function updateMicroBoards(state) {
   document.querySelectorAll(".micro-board").forEach(microBoardElement => {
     const macroRow = Number(microBoardElement.dataset.macroRow);
     const macroCol = Number(microBoardElement.dataset.macroCol);
-    const microBoard = state.macroBoard[macroRow][macroCol];
+    const microBoard = window.TicTacToeGame.getMicroBoard(state, macroRow, macroCol);
     const isActive = state.activeMicro !== null &&
       state.activeMicro.row === macroRow &&
       state.activeMicro.col === macroCol;
