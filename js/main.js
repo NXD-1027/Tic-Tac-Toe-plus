@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   const boardElement = document.querySelector("#board");
   const restartButton = document.querySelector("#restart-button");
+  const undoButton = document.querySelector("#undo-button");
   const modeSelect = document.querySelector("#mode-select");
   const difficultySelect = document.querySelector("#difficulty-select");
 
-  const { gameState, resetGame, makeMove } = window.TicTacToeGame;
+  const { gameState, resetGame, makeMove, undoForCurrentMode } = window.TicTacToeGame;
   const { renderBoard, renderGame } = window.TicTacToeRender;
 
   if (!boardElement) {
@@ -28,6 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
     syncControlsFromState();
   }
 
+  function resetAndRender() {
+    resetGame();
+    fullRender();
+    console.log("Game reset.");
+  }
+
   fullRender();
 
   boardElement.addEventListener("click", event => {
@@ -49,20 +56,29 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Move made:", { macroRow, macroCol, microIndex });
   });
 
-  restartButton?.addEventListener("click", () => {
-    resetGame();
-    fullRender();
-    console.log("Game reset.");
+  restartButton?.addEventListener("click", resetAndRender);
+
+  undoButton?.addEventListener("click", () => {
+    const undone = undoForCurrentMode(gameState);
+
+    if (!undone) {
+      console.log("Nothing to undo.");
+      return;
+    }
+
+    renderGame(gameState);
+    console.log("Move undone.");
   });
 
   modeSelect?.addEventListener("change", event => {
     gameState.mode = event.target.value;
-    renderGame(gameState);
+    resetAndRender();
     console.log("Mode changed:", gameState.mode);
   });
 
   difficultySelect?.addEventListener("change", event => {
     gameState.aiDifficulty = event.target.value;
+    renderGame(gameState);
     console.log("AI difficulty changed:", gameState.aiDifficulty);
   });
 });
