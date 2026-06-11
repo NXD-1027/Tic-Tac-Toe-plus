@@ -1,0 +1,223 @@
+:root {
+  color-scheme: light;
+  --bg: #f6f7fb;
+  --panel: #ffffff;
+  --panel-soft: #f0f3f8;
+  --text: #172033;
+  --muted: #647084;
+  --line: #c9d1df;
+  --strong-line: #25324a;
+  --accent: #4f6df5;
+  --accent-soft: #e8ecff;
+  --shadow: 0 20px 60px rgba(23, 32, 51, 0.12);
+  --radius: 20px;
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(79, 109, 245, 0.18), transparent 36rem),
+    linear-gradient(135deg, #f8faff 0%, var(--bg) 100%);
+}
+
+button,
+select {
+  font: inherit;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+.app {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: 32px 18px 44px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 4rem);
+  line-height: 1;
+}
+
+.subtitle {
+  margin: 12px 0 0;
+  color: var(--muted);
+}
+
+.status-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: min(100%, 620px);
+  margin: 0 auto 20px;
+}
+
+.status-card {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(201, 209, 223, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(23, 32, 51, 0.07);
+  text-align: center;
+  font-weight: 700;
+}
+
+.game-area {
+  display: flex;
+  justify-content: center;
+}
+
+.macro-board {
+  width: min(92vw, 620px);
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: clamp(6px, 1.5vw, 12px);
+  padding: clamp(8px, 2vw, 14px);
+  background: var(--strong-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.micro-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2px;
+  padding: 4px;
+  background: var(--line);
+  border: 2px solid rgba(255, 255, 255, 0.65);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  color: var(--text);
+  background: var(--panel);
+  border: 0;
+  border-radius: 8px;
+  font-size: clamp(1.1rem, 4vw, 2rem);
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cell:hover,
+.cell:focus-visible {
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 2px var(--accent);
+  outline: none;
+  transform: scale(0.98);
+}
+
+.cell.x {
+  color: #2f56d9;
+}
+
+.cell.o {
+  color: #d84c5f;
+}
+
+.control-panel {
+  width: min(100%, 620px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin: 22px auto 0;
+}
+
+.control-panel button,
+.control-field select {
+  min-height: 44px;
+  border: 1px solid rgba(201, 209, 223, 0.95);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 8px 24px rgba(23, 32, 51, 0.08);
+}
+
+.control-panel button {
+  padding: 0 18px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.control-panel button:disabled {
+  cursor: not-allowed;
+  color: var(--muted);
+  background: var(--panel-soft);
+  box-shadow: none;
+}
+
+.control-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.control-field select {
+  padding: 0 36px 0 14px;
+}
+
+@media (max-width: 640px) {
+  .app {
+    padding-top: 24px;
+  }
+
+  .status-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .control-panel {
+    align-items: stretch;
+  }
+
+  .control-panel button,
+  .control-field {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .control-field select {
+    flex: 1;
+  }
+}
